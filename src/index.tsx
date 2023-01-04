@@ -26,4 +26,3 @@ export const getWifiInfo = (): Promise<string | null> =>
 
 export const logSomethingInJavaConsole = (value: string): Promise<string> =>
   ExampleModule.logSomethingOnJavaConsole(value);
-
