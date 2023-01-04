@@ -20,3 +20,10 @@ const ExampleModule = NativeModules.ExampleModule
 export function multiply(a: number, b: number): Promise<number> {
   return ExampleModule.multiply(a, b);
 }
+
+export const getWifiInfo = (): Promise<string | null> =>
+  ExampleModule.getWifiInfo();
+
+export const logSomethingInJavaConsole = (value: string): Promise<string> =>
+  ExampleModule.logSomethingOnJavaConsole(value);
+
