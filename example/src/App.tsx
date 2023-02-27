@@ -1,38 +1,86 @@
 import * as React from 'react';
 
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import {
   multiply,
-  getWifiInfo,
-  logSomethingInJavaConsole,
+  logValueOnDevice,
+  getDeviceName,
 } from 'react-native-example-module';
 
 import styles from './styles';
 
-const DEFAULT_VALUE = 'Default value to log on Java Console';
 const PLACEHOLDER = 'Write what ever you want to log :)';
 const DISCLAIMER =
-  '*REMEMBER: To see logs on Java Console just run $ adb logcat in the root of this project';
+  '*REMEMBER: To see logs in Android (Java Console), just run $ adb logcat in the root of this project';
+
+enum Keys {
+  a = 'a',
+  b = 'b',
+}
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-  const [wifiInfo, setWifiInfo] = React.useState<string | null>(null);
-  const [value, setValue] = React.useState<string>(DEFAULT_VALUE);
+  const [result, setResult] = React.useState<number>(0);
+  const [value, setValue] = React.useState<string>('');
+  const [numbers, setNumbers] = React.useState<{ a: number; b: number }>({
+    a: 0,
+    b: 0,
+  });
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-    getWifiInfo().then(setWifiInfo);
-  }, []);
+  const [deviceName, setDeviceName] = React.useState<string>('unknown');
+
+  const addNumber = (key: Keys) =>
+    setNumbers((state) => ({ ...state, [key]: state[key] + 1 }));
+
+  const subtractNumber = (key: Keys) =>
+    setNumbers((state) => ({ ...state, [key]: state[key] - 1 }));
+
+  const getResult = () => multiply(numbers.a, numbers.b).then(setResult);
+
+  const getName = () => getDeviceName().then(setDeviceName);
 
   const logValue = () => {
-    logSomethingInJavaConsole(value);
-    console.warn(`Logged: ${value} *=== Check your Java Console ;) ===*`);
+    logValueOnDevice(value);
+    console.warn(`Logged: ${value} *=== Check your device console ;) ===*`);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.margin}>Result: {result}</Text>
-      <Text style={styles.margin}>WifiInfo: {wifiInfo}</Text>
+      <Text style={[styles.margin, styles.title]}>Result: {result}</Text>
+      <View style={styles.numbersContainer}>
+        <View style={styles.numbersRow}>
+          <Pressable
+            onPress={() => subtractNumber(Keys.a)}
+            style={styles.pressable}
+          >
+            <Text style={styles.pressableText}>sub</Text>
+          </Pressable>
+          <Text>A: {numbers.a}</Text>
+          <Pressable onPress={() => addNumber(Keys.a)} style={styles.pressable}>
+            <Text style={styles.pressableText}>add</Text>
+          </Pressable>
+        </View>
+        <View style={styles.numbersRow}>
+          <Pressable
+            onPress={() => subtractNumber(Keys.b)}
+            style={styles.pressable}
+          >
+            <Text style={styles.pressableText}>sub</Text>
+          </Pressable>
+          <Text>B: {numbers.b}</Text>
+          <Pressable onPress={() => addNumber(Keys.b)} style={styles.pressable}>
+            <Text style={styles.pressableText}>add</Text>
+          </Pressable>
+        </View>
+      </View>
+      <Pressable style={styles.pressable} onPress={getResult}>
+        <Text style={styles.pressableText}>Get result</Text>
+      </Pressable>
+      <Text style={[styles.margin, styles.title]}>
+        Device name: {deviceName}
+      </Text>
+      <Pressable style={styles.pressable} onPress={getName}>
+        <Text style={styles.pressableText}>Get device name</Text>
+      </Pressable>
       <Text style={[styles.margin, styles.text]}>TextInput value: {value}</Text>
       <TextInput
         value={value}
@@ -40,9 +88,9 @@ export default function App() {
         placeholder={PLACEHOLDER}
         style={styles.textInput}
       />
-      <TouchableOpacity style={styles.touchableOpacity} onPress={logValue}>
-        <Text style={styles.touchableText}>Log value ;)</Text>
-      </TouchableOpacity>
+      <Pressable style={styles.pressable} onPress={logValue} disabled={!value}>
+        <Text style={styles.pressableText}>Log value ;)</Text>
+      </Pressable>
       <Text style={styles.margin}>{DISCLAIMER}</Text>
     </View>
   );

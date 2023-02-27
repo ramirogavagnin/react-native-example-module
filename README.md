@@ -5,22 +5,28 @@ Example React Native module
 ## Installation
 
 ```sh
-npm install react-native-example-module
+yarn react-native-example-module
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-example-module';
+import {
+  multiply,
+  getDeviceName,
+  logSomethingInJavaConsole,
+} from 'react-native-example-module';
 
-// ...
-
+// Return the multiplied result
 const result = await multiply(3, 7);
-```
 
-## Contributing
+// Return your device name
+const deviceName = await getDeviceName();
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+// Return the string you've just logged on your device console
+const loggedValue = await logValueOnDevice("Any string you wanna log");
+``
+
 
 ## License
 
@@ -29,3 +35,4 @@ MIT
 ---
 
 Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+```

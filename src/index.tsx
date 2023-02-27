@@ -17,12 +17,11 @@ const ExampleModule = NativeModules.ExampleModule
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return ExampleModule.multiply(a, b);
-}
+export const multiply = (a: number, b: number): Promise<number> =>
+  ExampleModule.multiply(a, b);
 
-export const getWifiInfo = (): Promise<string | null> =>
-  ExampleModule.getWifiInfo();
+export const getDeviceName = (): Promise<string> =>
+  ExampleModule.getDeviceName();
 
-export const logSomethingInJavaConsole = (value: string): Promise<string> =>
-  ExampleModule.logSomethingOnJavaConsole(value);
+export const logValueOnDevice = (value: string): Promise<string> =>
+  ExampleModule.logValueOnDevice(value);

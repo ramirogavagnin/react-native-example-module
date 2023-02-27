@@ -3,8 +3,6 @@
 @implementation ExampleModule
 RCT_EXPORT_MODULE()
 
-// Example method
-// See // https://reactnative.dev/docs/native-modules-ios
 RCT_REMAP_METHOD(multiply,
                  multiplyWithA:(double)a withB:(double)b
                  withResolver:(RCTPromiseResolveBlock)resolve
@@ -13,6 +11,24 @@ RCT_REMAP_METHOD(multiply,
     NSNumber *result = @(a * b);
 
     resolve(result);
+}
+
+RCT_REMAP_METHOD(logValueOnDevice,
+                 value:(NSString*)v
+                 withResolver:(RCTPromiseResolveBlock)resolve
+                 withRejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSLog(@"My string: %@", v);
+    resolve(0);
+}
+
+- (NSString *) getDeviceName {
+    UIDevice *currentDevice = [UIDevice currentDevice];
+    return currentDevice.name;
+}
+
+RCT_EXPORT_METHOD(getDeviceName:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    resolve(self.getDeviceName);
 }
 
 // Don't compile this code when we build for the old architecture.
